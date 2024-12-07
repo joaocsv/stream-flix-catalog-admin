@@ -1,8 +1,10 @@
 package com.streamflix.catalog.admin.domain;
 
+import com.streamflix.catalog.admin.domain.validation.ValidationHandler;
+
 import java.util.Objects;
 
-public class Entity <Id extends Identifier> {
+public abstract class Entity <Id extends Identifier> {
     protected final Id id;
 
     public Entity(Id id) {
@@ -12,6 +14,8 @@ public class Entity <Id extends Identifier> {
     public Id getId() {
         return id;
     }
+
+    public abstract void validate (ValidationHandler handler);
 
     @Override
     public boolean equals(Object o) {

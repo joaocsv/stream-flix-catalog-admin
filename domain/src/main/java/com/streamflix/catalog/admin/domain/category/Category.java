@@ -1,6 +1,7 @@
 package com.streamflix.catalog.admin.domain.category;
 
 import com.streamflix.catalog.admin.domain.AggregateRoot;
+import com.streamflix.catalog.admin.domain.validation.ValidationHandler;
 
 import java.time.Instant;
 
@@ -27,6 +28,11 @@ public class Category extends AggregateRoot <CategoryId> {
         CategoryId id = CategoryId.unique();
         Instant now = Instant.now();
         return new Category(id, name, description, active, now, now, null);
+    }
+
+    @Override
+    public void validate(ValidationHandler handler) {
+        new CategoryValidator(this, handler).validate();
     }
 
     public String getName() {
