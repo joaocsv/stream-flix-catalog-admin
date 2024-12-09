@@ -16,7 +16,7 @@ public class ThrowValidationHandler implements ValidationHandler {
 
     @Override
     public ValidationHandler append(Error error) {
-        throw DomainException.with(List.of(error));
+        throw DomainException.with(error);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class ThrowValidationHandler implements ValidationHandler {
         try {
             validation.validate();
         } catch (final Exception exception) {
-            throw DomainException.with(List.of(new Error(exception.getMessage())));
+            throw DomainException.with(new Error(exception.getMessage()));
         }
 
         return this;

@@ -14,7 +14,7 @@ public class Category extends AggregateRoot <CategoryId> {
     private Instant updatedAt;
     private Instant deletedAt;
 
-    private Category(CategoryId id, String name, String description, Boolean isActive, Instant createdAt, Instant updatedAt, Instant deletedAt) {
+    private Category(final CategoryId id, final String name, final String description, final Boolean isActive, final Instant createdAt, final Instant updatedAt, final Instant deletedAt) {
         super(id);
         this.name = name;
         this.description = description;
@@ -24,15 +24,50 @@ public class Category extends AggregateRoot <CategoryId> {
         this.deletedAt = deletedAt;
     }
 
-    public static Category newCategory (String name, String description, Boolean active) {
+    public static Category newCategory (final String name, final String description, final Boolean isActive) {
         CategoryId id = CategoryId.unique();
         Instant now = Instant.now();
-        return new Category(id, name, description, active, now, now, null);
+        Instant deletedAt = isActive ? null : now;
+        return new Category(id, name, description, isActive, now, now, deletedAt);
     }
 
     @Override
     public void validate(ValidationHandler handler) {
         new CategoryValidator(this, handler).validate();
+    }
+
+    public Category activate () {
+        if (this.getDeletedAt() != null) {
+            this.setIsActive(true);
+            this.setDeletedAt(null);
+            this.setUpdatedAt(Instant.now());
+        }
+
+        return this;
+    }
+
+    public Category deactivate () {
+        if (this.getDeletedAt() == null) {
+            this.setIsActive(false);
+            this.setDeletedAt(Instant.now());
+            this.setUpdatedAt(Instant.now());
+        }
+
+        return this;
+    }
+
+    public Category update(final String name, final String description, final Boolean isActive) {
+        if (isActive) {
+            this.activate();
+        } else {
+            this.deactivate();
+        }
+
+        this.setName(name);
+        this.setDescription(description);
+        this.setUpdatedAt(Instant.now());
+
+        return this;
     }
 
     public String getName() {
