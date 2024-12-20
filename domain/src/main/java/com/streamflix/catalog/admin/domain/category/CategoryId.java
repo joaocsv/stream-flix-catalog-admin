@@ -2,6 +2,7 @@ package com.streamflix.catalog.admin.domain.category;
 
 import com.streamflix.catalog.admin.domain.Identifier;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class CategoryId extends Identifier {
@@ -25,5 +26,17 @@ public class CategoryId extends Identifier {
 
     public static CategoryId from (UUID value) {
         return new CategoryId(value.toString().toLowerCase());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        CategoryId that = (CategoryId) o;
+        return Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(value);
     }
 }

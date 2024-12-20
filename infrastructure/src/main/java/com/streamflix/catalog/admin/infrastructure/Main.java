@@ -1,10 +1,14 @@
 package com.streamflix.catalog.admin.infrastructure;
 
-import com.streamflix.catalog.admin.application.UseCase;
+import com.streamflix.catalog.admin.infrastructure.configuration.WebServerConfig;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.env.AbstractEnvironment;
 
+@SpringBootApplication
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello, World!");
-        System.out.println(new UseCase().execute());
+        System.setProperty(AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME, "development");
+        SpringApplication.run(WebServerConfig.class, args);
     }
 }

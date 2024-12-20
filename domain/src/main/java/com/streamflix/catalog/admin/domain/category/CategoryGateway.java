@@ -7,7 +7,7 @@ import java.util.Optional;
 public interface CategoryGateway {
     Category create (Category category);
     Optional<Category> findById(CategoryId id);
-    Category deleteById(CategoryId id);
+    void deleteById(CategoryId id);
     Category update(Category category);
     Pagination<Category> findAll(CategorySearchQuery query);
 }

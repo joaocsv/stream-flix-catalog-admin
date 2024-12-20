@@ -5,8 +5,7 @@ import com.streamflix.catalog.admin.domain.validation.ValidationHandler;
 
 import java.time.Instant;
 
-public class Category extends AggregateRoot <CategoryId> {
-    private CategoryId id;
+public class Category extends AggregateRoot <CategoryId> implements Cloneable{
     private String name;
     private String description;
     private Boolean isActive;
@@ -116,5 +115,14 @@ public class Category extends AggregateRoot <CategoryId> {
 
     public void setDeletedAt(Instant deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    @Override
+    public Category clone() {
+        try {
+            return (Category) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

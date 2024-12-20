@@ -21,7 +21,7 @@ public class CreateCategoryUseCaseTest {
         final var command = CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
 
         final var createCategoryUseCase = new DefaultCreateCategoryUseCase(categoryGateway);
-        final var output = createCategoryUseCase.execute(command).getLeft();
+        final var output = createCategoryUseCase.execute(command).get();
 
         Assertions.assertNotNull(output);
         Assertions.assertNotNull(output.id());
@@ -46,7 +46,7 @@ public class CreateCategoryUseCaseTest {
         final CategoryGateway categoryGateway = Mockito.mock(CategoryGateway.class);
         final var command = CreateCategoryCommand.with(null, "Filmes no top 10 de hoje", true);
         final var createCategoryUseCase = new DefaultCreateCategoryUseCase(categoryGateway);
-        final var notification = createCategoryUseCase.execute(command).get();
+        final var notification = createCategoryUseCase.execute(command).getLeft();
 
         Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());
@@ -64,7 +64,7 @@ public class CreateCategoryUseCaseTest {
         final var command = CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
 
         final var createCategoryUseCase = new DefaultCreateCategoryUseCase(categoryGateway);
-        final var output = createCategoryUseCase.execute(command).getLeft();
+        final var output = createCategoryUseCase.execute(command).get();
 
         Assertions.assertNotNull(output);
         Assertions.assertNotNull(output.id());
@@ -92,7 +92,7 @@ public class CreateCategoryUseCaseTest {
         final var command = CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
         final var createCategoryUseCase = new DefaultCreateCategoryUseCase(categoryGateway);
 
-        final var notification = createCategoryUseCase.execute(command).get();
+        final var notification = createCategoryUseCase.execute(command).getLeft();
 
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "Gateway Error";
@@ -100,7 +100,7 @@ public class CreateCategoryUseCaseTest {
         Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());
 
-        Mockito.verify(categoryGateway, Mockito.times(0))
+        Mockito.verify(categoryGateway, Mockito.times(1))
             .create(Mockito.argThat(category ->
                 Objects.equals(expectedName, category.getName())
                     && Objects.equals(expectedDescription, category.getDescription())
@@ -108,7 +108,7 @@ public class CreateCategoryUseCaseTest {
                     && Objects.nonNull(category.getId())
                     && Objects.nonNull(category.getCreatedAt())
                     && Objects.nonNull(category.getUpdatedAt())
-                    && Objects.nonNull(category.getDeletedAt())
+                    && Objects.isNull(category.getDeletedAt())
             ));
     }
 }

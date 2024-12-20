@@ -17,19 +17,18 @@ public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase {
     }
 
     @Override
-    public Either<CreateCategoryOutput, NotificationHandler> execute(CreateCategoryCommand input) {
+    public Either<NotificationHandler, CreateCategoryOutput> execute(CreateCategoryCommand input) {
         final var category = Category.newCategory(input.name(), input.description(), input.isActive());
         final var notificationHandler = NotificationHandler.create();
 
         category.validate(notificationHandler);
 
         if (notificationHandler.hasErrors()) {
-            return Either.right(notificationHandler);
+            return Either.left(notificationHandler);
         }
 
         return Try(() -> this.categoryGateway.create(category))
                 .toEither()
-                .swap()
-                .bimap(CreateCategoryOutput::from, NotificationHandler::create);
+                .bimap(NotificationHandler::create, CreateCategoryOutput::from);
     }
 }
